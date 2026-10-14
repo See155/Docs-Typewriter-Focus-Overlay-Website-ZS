@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Customize Google Docs Typewriter Focus for a more focused writing experience.">
+  <title>Google Docs Typewriter Focus Overlay — Find your flow</title>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+
+  <style>
+    :root {
+      --background: #f8f8f4;
+      --surface: #fff;
+      --text: #252923;
+      --muted: #6e746c;
+      --accent: #526c54;
+      --accent-hover: #405642;
+      --border: #e7e8e1;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 1. Expand standard workspace boundaries to fill 1080p natively */
+    .container {
+      width: min(1440px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: bold;
+      letter-spacing: -0.5px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    nav a:hover,
+    footer a:hover {
+      color: var(--accent);
+    }
+
+/* Upgraded High-Visibility Navbar Layout Buttons */
+.x-link-btn,
+.paypal-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px; /* Boosted padding from 6px to expand the clickable canvas touch target */
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.x-link-btn:hover {
+  border-color: var(--text);
+  color: var(--text);
+  background-color: var(--border);
+}
+
+.paypal-link-btn:hover {
+  border-color: #0079C1;
+  background-color: var(--border);
+}
+
+/* Forces both internal SVG paths to scale up boldly and dynamically balance each other */
+.x-link-btn svg {
+  width: 18px;  /* Significantly bumped from 14px */
+  height: 18px; /* Significantly bumped from 14px */
+  fill: currentColor;
+}
+
+.paypal-link-btn svg {
+  width: 18px;  /* Significantly bumped from 14px */
+  height: 18px; /* Significantly bumped from 14px */
+}
+
+/* Ensure proper dark theme brightness balance for payment icons */
+body.dark-theme .paypal-link-btn:hover {
+  color: #0079c1;
+  border-color: #0079c1;
+}
+
+    /* 2. Scale hero components proportionally on larger layouts */
+    .hero {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr; /* Grants slightly more footprint to the video engine */
+      align-items: center;
+      gap: 56px;
+      padding: 64px 0 76px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      font-family: var(--serif);
+      font-weight: normal;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 6vw, 62px);
+    }
+
+    .intro {
+      margin: 22px 0 28px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 7px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .small-note {
+      margin: 13px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .video-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: 0 20px 60px #25301f12;
+    }
+
+    .video-card video {
+      display: block;
+      width: 100%;
+      background: #202020;
+    }
+
+    .video-caption {
+      padding: 13px 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .content-section {
+      padding: 68px 0 78px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-heading {
+      margin: 0 0 12px;
+      font-size: 37px;
+    }
+
+    .section-intro {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    /* Redesigned Time Jump Layout */
+    .time-jumps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .time-button {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .time-button:hover,
+    .time-button:focus-visible {
+      border-color: var(--accent);
+      background: #f4f6f1;
+      box-shadow: 0 4px 12px #25301f05;
+    }
+
+    .timestamp {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #edf0e9;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    .jump-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .feature-grid,
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .feature,
+    .step-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface);
+    }
+
+    .feature {
+      padding: 24px;
+    }
+
+    .feature h3,
+    .step-copy h3 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: normal;
+    }
+
+    .feature p,
+    .step-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 3. Increase installation steps photo frames significantly on desktop panels */
+    .step-image {
+      display: block;
+      width: 100%;
+      height: 340px; /* Upgraded from 230px to remove scaling grain */
+      padding: 12px;
+      background: #f1f1ee;
+      object-fit: contain;
+    }
+
+    .step-copy {
+      padding: 20px;
+    }
+
+    .closing {
+      padding: 60px 20px;
+      border-radius: 12px;
+      background: #edf0e9;
+      text-align: center;
+    }
+
+    .closing h2 {
+      margin: 0 0 14px;
+      font-size: 38px;
+    }
+
+    .closing p {
+      margin: 0 0 24px;
+      color: var(--muted);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 28px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 34px;
+        padding: 48px 0 60px;
+      }
+
+      .feature-grid,
+      .steps-grid,
+      .time-jumps {
+        grid-template-columns: 1fr; /* Stacks everything neatly in a single column for mobile */
+      }
+
+      .step-image {
+        height: auto;
+        max-height: 420px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      nav {
+        gap: 12px;
+        font-size: 12px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+
+    /* Dynamic Highlight & Progress Bar Styling */
+    .time-button.active {
+      border-color: var(--accent);
+      background: linear-gradient(to right, #f2f5ee var(--progress, 0%), var(--surface) var(--progress, 0%));
+      box-shadow: 0 4px 12px #25301f08;
+    }
+
+    .time-button.active .timestamp {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .time-button.active .jump-title {
+      font-weight: 600;
+    }
+
+    /* --- Dark Mode Custom Properties --- */
+    body.dark-theme {
+      --background: #141613;
+      --surface: #1e221d;
+      --text: #e1e3de;
+      --muted: #9fa59c;
+      --border: #2c322b;
+      --accent: #8fb392;
+      --accent-hover: #b0cbb2;
+    }
+    
+    /* Make adjustments to card visual weights under dark theme rules */
+    body.dark-theme .closing {
+      background: #1c211a;
+    }
+    body.dark-theme .timestamp {
+      background: #252b22;
+    }
+    body.dark-theme .time-button.active {
+      background: linear-gradient(to right, #222b1f var(--progress, 0%), var(--surface) var(--progress, 0%));
+    }
+    body.dark-theme .time-button:hover,
+    body.dark-theme .time-button:focus-visible {
+      background: #252b22;
+    }
+
+    /* --- Spotlight Tracker Overlay --- */
+    .spotlight-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none; /* Allows clicks to pass right through to buttons beneath */
+      z-index: 9999;
+      mix-blend-mode: multiply; /* Multiplies color layers smoothly */
+      background: radial-gradient(
+        circle 180px at var(--mouse-x, -200px) var(--mouse-y, -200px),
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.8) 40%,
+        rgba(20, 20, 20, 0) 100%
+      );
+      /* Default fallback blends with main layout background variable */
+      background-color: transparent; 
+      transition: background-color 0.4s ease;
+    }
+
+    /* Activate heavy spotlight shadow block ONLY when Dark Mode is turned on */
+    body.dark-theme .spotlight-mask {
+      background-color: rgba(5, 7, 5, 0.55); /* Adjust the 0.55 alpha up or down to make the dark room dimmer or brighter */
+    }
+
+    /* --- Theme Toggle Switch Button Component --- */
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* Adjust top logo spacing for the longer title name */
+    @media (max-width: 900px) {
+      header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+
+    /* --- Scroll-Driven Reveal Animations --- */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: opacity, transform;
+    }
+
+    /* Triggered state class via JS */
+    .reveal-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Subtle staggering delays for individual list child elements */
+    .time-button, .feature, .step-card {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .reveal-section.is-visible .time-button,
+    .reveal-section.is-visible .feature,
+    .reveal-section.is-visible .step-card {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Generate automatic step-staggering layout delays up to 3 columns */
+    .reveal-section.is-visible > div > *:nth-child(1) { transition-delay: 0.1s; }
+    .reveal-section.is-visible > div > *:nth-child(2) { transition-delay: 0.2s; }
+    .reveal-section.is-visible > div > *:nth-child(3) { transition-delay: 0.3s; }
+}
+
+    /* --- Interactive Scale Lift Animations --- */
+    .time-button, 
+    .feature, 
+    .step-card {
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                  border-color 0.2s, 
+                  background 0.2s, 
+                  box-shadow 0.3s !important;
+    }
+
+    /* Elevate and enlarge elements slightly on cursor hover states */
+    .time-button:hover, 
+    .feature:hover, 
+    .step-card:hover {
+      transform: translateY(-4px) scale(1.025) !important;
+      box-shadow: 0 10px 24px #25301f18 !important;
+      z-index: 2; /* Ensures cards stack above neighboring borders smoothly */
+    }
+
+    /* Keep deep theme shadow properties cohesive inside Dark Mode profiles */
+    body.dark-theme .time-button:hover,
+    body.dark-theme .feature:hover,
+    body.dark-theme .step-card:hover {
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4) !important;
+    }
+
+/* Smooth hover inversion for the secondary contact button */
+#contact .button:hover {
+  background: var(--accent) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* Premium Minimalist Wireframe Engineering Background */
+.ambient-bg-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--background);
+  transition: background 0.4s ease;
+}
+
+/* The Subtle Architectural Blueprint Axis Track */
+.bg-structure-ring {
+  position: absolute;
+  top: -10%;
+  left: -5%;
+  width: 700px;
+  height: 700px;
+  border: 1px dashed rgba(82, 108, 84, 0.2); /* Fine, sharp dashed tracking line */
+  border-radius: 50%;
+  pointer-events: none;
+  animation: slowSpin 90s linear infinite; /* Incredibly slow, calming crawl */
+}
+
+body.dark-theme .bg-structure-ring {
+  border-color: rgba(143, 179, 146, 0.15);
+}
+
+/* Sharp, Hollow Geometric Blueprint Overlays */
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: none !important; /* Zero blur for razor-sharp vector execution */
+  opacity: 1 !important;
+  background: transparent !important; /* COMPLETELY EMPTY HOLLOW BODY */
+  transition: border-color 0.4s ease;
+}
+
+/* Sharp hollow orbiters intercepting the track lines */
+.blob-1 {
+  width: 140px;
+  height: 140px;
+  border: 1px solid rgba(82, 108, 84, 0.4); /* Crisp Sage Ring outline */
+  top: 15%;
+  left: 15%;
+}
+
+.blob-2 {
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(222, 210, 155, 0.7); /* Sharp Gold Ring outline accent */
+  top: 70%;
+  left: 60%;
+}
+
+/* Clean Dark Mode line-weight swaps */
+body.dark-theme .blob-1 { border-color: rgba(143, 179, 146, 0.3); }
+body.dark-theme .blob-2 { border-color: rgba(222, 210, 155, 0.4); }
+
+@keyframes slowSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Premium Founder Guarantee Badge Styling */
+/* Minimal Editorial Guarantee Accent Layout */
+.guarantee-badge-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 12px 14px;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  text-align: left;
+}
+
+/* The Left-to-Right Protruding Bubble Animation Engine */
+.badge-vibe-tag {
+  font-family: monospace;
+  font-size: 19px; /* Increased from 13px to make it bold and standout */
+  font-weight: 900; /* Maximum structural font weight */
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-right: 2px solid var(--border);
+  padding-right: 14px; /* Added a tiny bit more spacing for the larger scale */
+  
+  /* Creates a moving color mask that mimics a smooth, fluid protrusion */
+  background: linear-gradient(
+    90deg, 
+    var(--accent) 0%, 
+    var(--accent) 35%, 
+    var(--accent-hover) 50%, 
+    #7ca380 55%, 
+    var(--accent) 70%, 
+    var(--accent) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: slowBubbleProtrude 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.badge-vibe-text {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.4;
+  
+  /* Applies a matching, slightly delayed protrusion to the main description text */
+  background: linear-gradient(
+    90deg, 
+    var(--text) 0%, 
+    var(--text) 40%, 
+    var(--accent) 50%, 
+    var(--text) 60%, 
+    var(--text) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: slowBubbleProtrude 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 0.4s; /* Delays the ripple so it travels logically from left to right */
+}
+
+.badge-vibe-text span {
+  color: var(--muted);
+  font-size: 12px;
+  display: block;
+  font-weight: normal;
+  -webkit-text-fill-color: var(--muted); /* Keeps sub-text clean and static */
+}
+
+/* Maintain crisp dark theme colors for the bubble gradient transit */
+body.dark-theme .badge-vibe-tag {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 35%, #bce0bf 50%, #fff 55%, var(--accent) 70%, var(--accent) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+}
+body.dark-theme .badge-vibe-text {
+  background: linear-gradient(90deg, var(--text) 0%, var(--text) 40%, var(--accent) 50%, var(--text) 60%, var(--text) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+}
+
+@keyframes slowBubbleProtrude {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Center wrapper for the CTA elements */
+.cta-center-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers both button and badge horizontally */
+  text-align: center;
+  margin-top: 32px;
+  width: 100%;
+}
+
+/* Upgraded Primary CTA Button Structure */
+.hero .button {
+  display: inline-block;
+  padding: 16px 44px; /* Increased padding to make it noticeably longer and slightly taller */
+  width: min(340px, 100%); /* Gives it an explicit, impactful maximum length */
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 17px; /* Bumped up from 15px for higher visibility */
+  font-weight: bold;
+  letter-spacing: -0.2px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(82, 108, 84, 0.25);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.hero .button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(82, 108, 84, 0.35);
+}
+
+/* Tweak badge layout spacing to account for the centered text alignment */
+.hero .guarantee-badge-container {
+  margin: 28px 0 12px 0; /* Cleared the old left margin offset to keep it perfectly centered */
+}
+
+/* High-Conversion Primary Button Pulse Animation */
+.hero .button,
+.closing .button {
+  position: relative;
+  animation: elegantBreathingPulse 3.5s ease-in-out infinite;
+  will-change: transform, box-shadow;
+}
+
+/* Pauses the pulse smoothly when the user actively hovers to click */
+.hero .button:hover,
+.closing .button:hover {
+  animation-play-state: paused;
+  background: var(--accent-hover);
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow: 0 10px 24px rgba(82, 108, 84, 0.45) !important;
+}
+
+@keyframes elegantBreathingPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(82, 108, 84, 0.25);
+  }
+  15% {
+    transform: scale(1.03); /* Subtle outward protrusion swell */
+    box-shadow: 0 6px 20px rgba(82, 108, 84, 0.45), 0 0 0 6px rgba(82, 108, 84, 0.15); /* Soft glowing aura expansion */
+  }
+  30% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(82, 108, 84, 0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(82, 108, 84, 0.25);
+  }
+}
+  </style>
+</head>
+
+<body>
+  <!-- Ambient Structural Background Layer -->
+  <div class="ambient-bg-wrapper">
+    <div class="bg-structure-ring">
+      <div class="ambient-blob blob-1"></div>
+      <div class="ambient-blob blob-2"></div>
+    </div>
+  </div>
+
+  <!-- Spotlight Overlay Effect Layer -->
+  <div class="spotlight-mask" id="spotlight"></div>
+
+  <div class="container">
+    <header>
+      <a class="brand" href="#">Google Docs Typewriter Focus Overlay</a>
+      <nav aria-label="Main navigation">
+        <a href="#demo">Video</a>
+        <a href="#features">Purpose</a>
+        <a href="#installation">Install</a>
+        <a href="#contact">Contact</a>
+        <!-- High-Visibility X Link Button -->
+        <a class="x-link-btn" href="https://x.com/coke_ovrdose?s=11&t=JKsHKGW7BD9QFlqTGbowhA" target="_blank" rel="noopener noreferrer" title="Follow on X">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+          </svg>
+        </a>
+
+        <!-- High-Visibility True-Color PayPal Support Link Button -->
+        <a class="paypal-link-btn" href="https://www.paypal.com/paypalme/ZSDoShoppin" target="_blank" rel="noopener noreferrer" title="Support via PayPal">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="transform: translate(0.5px, 0.5px);">
+            <!-- Back/Underlapping P Layer - Deep Corporate Blue -->
+            <path fill="#00457C" d="M17.36 2.25H9.963c-.636 0-1.137.455-1.273 1.091L5.51 19.502c-.09.41.228.819.637.819h4.318a1.002 1.002 0 00.954-.773l1.137-5.045.045-.227a1.442 1.442 0 011.41-1.136h1.727c3.545 0 6.136-1.546 6.955-5.364.318-1.545.182-2.773-.436-3.588A4.896 4.896 0 0017.36 2.25z"/>
+            <!-- Front/Overlapping P Layer - Vibrant Brand Cyan Blue -->
+            <path fill="#0079C1" d="M21.1 2.25h-2.318c.41.819.5 1.819.364 2.819l-1.455 7.636h1.727c3.545 0 6.136-1.546 6.955-5.364.318-1.545.182-2.773-.436-3.588A4.896 4.896 0 0021.1 2.25z"/>
+            <!-- Deep Core Shadow Overlay Intersection Space -->
+            <path fill="#002147" opacity="0.15" d="M17.324 12.705l.955-5.045c.045-.25.045-.455.045-.636a4.896 4.896 0 00-4.892-4.503H9.963c.41.819.5 1.819.364 2.819l-1.455 7.636h1.727c1.6 0 2.94-.318 3.791-.914a4.134 4.134 0 001.434-2.176z"/>
+          </svg>
+        </a>
+
+        <button class="theme-toggle-btn" id="theme-toggle" type="button">
+          <span class="theme-icon">🌙</span> <span class="theme-text">Dark Mode</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="demo">
+        <div>
+          <p class="eyebrow">Make it yours</p>
+          <h1>Find your focus, your way.</h1>
+          <p class="intro">
+            See how to customize the Google Docs Typewriter Focus Overlay for a more
+            focused, comfortable, and efficient writing experience.
+          </p>
+          
+          <!-- Centered CTA and Guarantee Badge Layout Wrapper -->
+          <div class="cta-center-group">
+            <a
+              class="button"
+              href="https://chromewebstore.google.com/detail/appljonmnhhblojkddepplkjbfkangpg?utm_source=item-share-cb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Add to Chrome</a>
+
+            <div class="guarantee-badge-container">
+              <div class="badge-vibe-tag">0% Bullshit</div>
+              <div class="badge-vibe-text">
+                User Satisfaction Guaranteed
+                <span>100% Free • Preconfigured • Install & Write</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="small-note" style="text-align: center;">Watch the walkthrough or jump to a timestamp.</p>
+        </div>
+
+        <div class="video-card">
+          <!-- Your exact embedded player code with the synchronized ID engine appended -->
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/nvLZuHP8SHs?si=H7YYT_LTahYj-Y--&enablejsapi=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width: 100%; border: none; aspect-ratio: 16/9; display: block;" id="demo-video"></iframe>
+          <div class="video-caption">
+            Typewriter Focus overlay customization walkthrough
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" aria-labelledby="jumps-heading">
+        <p class="eyebrow">Quick navigation</p>
+        <h2 class="section-heading" id="jumps-heading">Jump to a time</h2>
+        <p class="section-intro">
+          Select a timestamp, or use the video timeline to scrub through the recording.
+        </p>
+
+        <div class="time-jumps">
+          <button class="time-button" type="button" data-time="0:15">
+            <span class="timestamp">0:15</span>
+            <span class="jump-title">How to use Gifs and Image Backdrops</span>
+          </button>
+          <button class="time-button" type="button" data-time="0:55">
+            <span class="timestamp">0:55</span>
+            <span class="jump-title">Track Bar/ Rail Settings</span>
+          </button>
+          <button class="time-button" type="button" data-time="1:38">
+            <span class="timestamp">1:38</span>
+            <span class="jump-title">Text/ Marquee Settings</span>
+          </button>
+          <button class="time-button" type="button" data-time="2:30">
+            <span class="timestamp">2:30</span>
+            <span class="jump-title">Capsule Text Cutoff Setting</span>
+          </button>
+          <button class="time-button" type="button" data-time="2:55">
+            <span class="timestamp">2:55</span>
+            <span class="jump-title">Capsule Customization</span>
+          </button>
+          <button class="time-button" type="button" data-time="3:40">
+            <span class="timestamp">3:40</span>
+            <span class="jump-title">How to Give Yourself Aura!!!</span>
+          </button>
+          <button class="time-button" type="button" data-time="4:10">
+            <span class="timestamp">4:10</span>
+            <span class="jump-title">Lamp Settings</span>
+          </button>
+          <button class="time-button" type="button" data-time="4:55">
+            <span class="timestamp">4:55</span>
+            <span class="jump-title">Overlay in Use</span>
+          </button>
+          <button class="time-button" type="button" data-time="5:40">
+            <span class="timestamp">5:40</span>
+            <span class="jump-title">Overlay in Use (Lamp Off) (Glass Mode)</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="content-section" id="features">
+        <p class="eyebrow">Our Purpose</p>
+        <h2 class="section-heading">Eliminating distractions to unlock your true creative flow.</h2>
+
+        <div class="feature-grid">
+          <article class="feature">
+            <h3>Visual Isolation</h3>
+            <p>Our goal is to protect your attention by muting the surrounding interface clutter, letting you look only at the sentence you are writing.</p>
+          </article>
+          <article class="feature">
+            <h3>Ergonomic Comfort</h3>
+            <p>We believe writing shouldn't cause fatigue. Keeping your text centered in your line of sight helps reduce physical strain over long sessions.</p>
+          </article>
+          <article class="feature">
+            <h3>Immersive Atmosphere</h3>
+            <p>By blending custom aesthetics like glass mode or custom backdrop effects, we turn Google Docs into a deeply personal sanctuary for your ideas.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section" id="installation">
+        <p class="eyebrow">Get set up</p>
+        <h2 class="section-heading">Install in a few steps.</h2>
+        <p class="section-intro">Follow the images below to get started.</p>
+
+        <div class="steps-grid">
+          <article class="step-card">
+            <img
+              class="step-image"
+              src="install-step-1.png"
+              alt="Chrome Web Store page showing the button to add the extension"
+              loading="lazy"
+            >
+            <div class="step-copy">
+              <h3>1. Add to Chrome</h3>
+              <p>Click the "Add to Chrome" button on the extension page to download it to your browser in one tap.</p>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <img
+              class="step-image"
+              src="install-step-2.png"
+              alt="Browser Extensions menu showing how to pin Google Docs Typewriter Focus"
+              loading="lazy"
+            >
+            <div class="step-copy">
+              <h3>2. Pin the icon</h3>
+              <p>Click the puzzle piece icon at the top right of your browser, then click the pin icon next to Typewriter Focus to keep it handy.</p>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <img
+              class="step-image"
+              src="install-step-3.png"
+              alt="Extension settings showing site access for ://google.com"
+              loading="lazy"
+            >
+            <div class="step-copy">
+              <h3>3. Turn it on</h3>
+              <p>Open a Google Doc, click your new extension icon, and give it permission to run so it can display your custom overlay.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="closing">
+        <h2>Ready to find your flow?</h2>
+        <p>Get Typewriter Focus from the Chrome Web Store.</p>
+        <a
+          class="button"
+          href="https://chromewebstore.google.com/detail/google-docs-typewriter-fo/appljonmnhhblojkddepplkjbfkangpg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Add to Chrome</a>
+      </section>
+
+      <section class="content-section" id="contact" style="text-align: center; padding: 60px 0;">
+        <p class="eyebrow">Get in touch</p>
+        <h2 class="section-heading">Have a question or feedback?</h2>
+        <p class="section-intro" style="margin-bottom: 24px;">
+          Feel free to reach out. I'm always open to talking about Typewriter Focus or other development projects.
+        </p>
+        
+        <!-- Redesigned as a Secondary Outline Button -->
+        <button type="button" class="button" onclick="openGmailCompose()" 
+                style="cursor: pointer; font-family: var(--sans); background: transparent; border: 2px solid var(--accent); color: var(--accent); font-weight: bold; transition: all 0.2s;">
+          Contact via Email
+        </button>
+      </section>
+
+<script>
+  function openGmailCompose() {
+    var targetEmail = "collegepolar@gmail.com";
+    var subjectText = "Regarding Google Docs Typewriter Focus";
+    
+    var fallbackGmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(targetEmail) + "&su=" + encodeURIComponent(subjectText);
+    var newWindow = window.open(fallbackGmailUrl, '_blank');
+    
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      window.location.href = "mailto:" + targetEmail + "?subject=" + encodeURIComponent(subjectText);
+    }
+  }
+</script>
+      </section>
+    </main>
+
+    <footer>
+      <span>© <script>document.write(new Date().getFullYear())</script> Google Docs Typewriter Focus Overlay</span>
+      <div style="display: flex; gap: 20px;">
+        <a href="https://chromewebstore.google.com/detail/appljonmnhhblojkddepplkjbfkangpg?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer">
+          Chrome Web Store
+        </a>
+        <!-- Reuses the function to safely force To: and Subject strings -->
+        <button type="button" onclick="openGmailCompose()" style="background: none; border: none; padding: 0; color: inherit; font: inherit; cursor: pointer;">
+          Contact
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 1. Import YouTube's Core Framework API cleanly -->
+  <script src="https://www.youtube.com/embed/nvLZuHP8SHs?si=H7YYT_LTahYj-Y--&enablejsapi=1&rel=0"></script>
+
+  <!-- 2. Main Site Operation Logic Grid -->
+  <script>
+    let ytPlayer = null;
+    let progressTrackingInterval = null;
+    const buttons = Array.from(document.querySelectorAll(".time-button"));
+
+    function timeToSeconds(timeStr) {
+      return timeStr.split(":").map(Number).reduce((total, part) => total * 60 + part, 0);
+    }
+
+    const chapters = buttons.map((button, index) => {
+      return {
+        element: button,
+        start: timeToSeconds(button.dataset.time),
+        index: index
+      };
+    });
+
+    // Automatically hooks into your iframe using its id="demo-video"
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('demo-video', {
+        events: {
+          'onStateChange': handlePlayerStateChange
+        }
+      });
+    }
+
+    function handlePlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        progressTrackingInterval = setInterval(syncChapterHighlights, 250);
+      } else {
+        clearInterval(progressTrackingInterval);
+      }
+    }
+
+    function syncChapterHighlights() {
+      if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+
+      const currentTime = ytPlayer.getCurrentTime();
+      const duration = ytPlayer.getDuration() || 0;
+
+      chapters.forEach((chapter, i) => {
+        const nextChapter = chapters[i + 1];
+        const endTime = nextChapter ? nextChapter.start : duration;
+
+        if (currentTime >= chapter.start && currentTime < endTime) {
+          chapter.element.classList.add("active");
+          const segmentDuration = endTime - chapter.start;
+          const progressPercent = segmentDuration > 0 ? ((currentTime - chapter.start) / segmentDuration) * 100 : 0;
+          chapter.element.style.setProperty("--progress", `${progressPercent}%`);
+        } else {
+          chapter.element.classList.remove("active");
+          chapter.element.style.removeProperty("--progress");
+        }
+      });
+    }
+
+    // Handles the timestamp card click jump and scrolls back to top player
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const seconds = timeToSeconds(button.dataset.time);
+
+        if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+          ytPlayer.seekTo(seconds, true);
+          ytPlayer.playVideo();
+          
+          document.getElementById("demo").scrollIntoView({ 
+            behavior: "smooth", 
+            block: "start" 
+          });
+        }
+      });
+    });
+
+    // --- Spotlight Tracking Engine ---
+    const spotlight = document.getElementById("spotlight");
+    window.addEventListener("mousemove", (e) => {
+      spotlight.style.setProperty("--mouse-x", `${e.clientX}px`);
+      spotlight.style.setProperty("--mouse-y", `${e.clientY}px`);
+    });
+
+    // --- Dark Mode Switching Controller Logic ---
+    const themeToggleBtn = document.getElementById("theme-toggle");
+    const themeIcon = themeToggleBtn.querySelector(".theme-icon");
+    const themeText = themeToggleBtn.querySelector(".theme-text");
+
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.classList.add("dark-theme");
+      if(themeIcon) themeIcon.textContent = "☀️";
+      if(themeText) themeText.textContent = "Light Mode";
+    }
+
+    themeToggleBtn.addEventListener("click", () => {
+      const isDark = document.body.classList.toggle("dark-theme");
+      if(themeIcon) themeIcon.textContent = isDark ? "☀️" : "🌙";
+      if(themeText) themeText.textContent = isDark ? "Light Mode" : "Dark Mode";
+    });
+
+    // --- Scroll Reveal Animation Observer Engine ---
+    document.addEventListener("DOMContentLoaded", () => {
+      const targetSections = document.querySelectorAll('.content-section, .closing');
+      targetSections.forEach(section => section.classList.add('reveal-section'));
+
+      const revealOptions = { root: null, threshold: 0.12, rootMargin: "0px 0px -40px 0px" };
+
+      const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, revealOptions);
+
+      targetSections.forEach(section => {
+        scrollObserver.observe(section);
+      });
+    });
+
+    // --- Dynamic Contact Handler Logic ---
+    function openGmailCompose() {
+      var targetEmail = "collegepolar@gmail.com";
+      var subjectText = "Regarding Google Docs Typewriter Focus";
+      var fallbackGmailUrl = "https://google.com" + encodeURIComponent(targetEmail) + "&su=" + encodeURIComponent(subjectText);
+      var newWindow = window.open(fallbackGmailUrl, '_blank');
+      
+      if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+        window.location.href = "mailto:" + targetEmail + "?subject=" + encodeURIComponent(subjectText);
+      }
+    }
+  </script>
+</body>
+</html>
